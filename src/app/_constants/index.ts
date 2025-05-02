@@ -50,3 +50,29 @@ export const statesOfNigeria = [
   "Zamfara",
   "Abuja",
 ];
+
+export function getMostFrequentLevel(levels: number[]): {
+  level: number | null;
+  count: number;
+} {
+  const frequencyMap: Record<number, number> = {};
+
+  // Count occurrences of each level
+  levels.forEach((level) => {
+    frequencyMap[level] = (frequencyMap[level] || 0) + 1;
+  });
+
+  // Find the level with the maximum count
+  let mostFrequentLevel: number | null = null;
+  let maxCount = 0;
+
+  for (const [levelStr, count] of Object.entries(frequencyMap)) {
+    const level = Number(levelStr);
+    if (count > maxCount) {
+      mostFrequentLevel = level;
+      maxCount = count;
+    }
+  }
+
+  return { level: mostFrequentLevel, count: maxCount };
+}

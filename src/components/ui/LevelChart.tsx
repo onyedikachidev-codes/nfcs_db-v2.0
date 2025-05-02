@@ -10,9 +10,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-type LevelChartProps = {
-  data: { level: string | number; count: number }[];
-};
+interface LevelData {
+  level: number;
+  count: number;
+}
+
+interface LevelChartProps {
+  data?: LevelData[];
+}
 
 export default function LevelChart({ data }: LevelChartProps) {
   return (

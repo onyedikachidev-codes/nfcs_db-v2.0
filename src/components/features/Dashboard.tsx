@@ -1,19 +1,12 @@
-import {
-  fetchFaculty,
-  fetchLevels,
-  fetchState,
-  getLevel,
-  getMembers,
-} from "@/api/index";
-
-import { PAGE_SIZE } from "@/app/_constants";
-import { getMostFrequentLevel } from "../utils/function";
-import LevelChart from "./LevelChart";
-import Stats from "./Stats";
+import React from "react";
+import { fetchFaculty, fetchLevels, fetchState, getLevel } from "@/api";
+import LevelChart from "../ui/LevelChart";
+import { getMostFrequentLevel } from "@/app/_constants";
+import { getMembers } from "@/lib/actions";
+import Stats from "../ui/Stats";
 
 export default async function Dashboard() {
-  const page = 1;
-  const { members, count } = await getMembers(page, PAGE_SIZE);
+  const { count } = await getMembers();
 
   const levels = await fetchLevels();
   const result = getMostFrequentLevel(levels);
@@ -29,7 +22,7 @@ export default async function Dashboard() {
 
   return (
     <div className="ml-7">
-      <h2 className="text-center text-3xl font-semibold uppercase mt-5 dark:text-accent-200 font-serif underline">
+      <h2 className="text-center text-3xl font-semibold uppercase mt-5  dark:text-accent-200 font-serif underline">
         Top Statistics
       </h2>
 

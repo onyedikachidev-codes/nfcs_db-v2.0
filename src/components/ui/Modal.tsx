@@ -1,71 +1,36 @@
 "use client";
 
 import { FaTimes } from "react-icons/fa";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, FieldError } from "react-hook-form";
 
-import { createMemberProfile } from "../lib/actions";
+import { createMemberProfile } from "@/lib/actions";
+import { faculties, statesOfNigeria } from "@/app/_constants";
 
-export default function Modal({ isOpen, onClose }) {
-  const faculties = [
-    "Arts",
-    "Education",
-    "Law",
-    "Management Science",
-    "Media and Communication",
-    "Science",
-    "Social Science",
-    "Transport",
-  ];
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-  const statesOfNigeria = [
-    "Abia",
-    "Adamawa",
-    "Akwa Ibom",
-    "Anambra",
-    "Bauchi",
-    "Bayelsa",
-    "Benue",
-    "Borno",
-    "Cross River",
-    "Delta",
-    "Ebonyi",
-    "Edo",
-    "Ekiti",
-    "Enugu",
-    "Gombe",
-    "Imo",
-    "Jigawa",
-    "Kaduna",
-    "Kano",
-    "Katsina",
-    "Kebbi",
-    "Kogi",
-    "Kwara",
-    "Lagos",
-    "Nasarawa",
-    "Niger",
-    "Ogun",
-    "Ondo",
-    "Osun",
-    "Oyo",
-    "Plateau",
-    "Rivers",
-    "Sokoto",
-    "Taraba",
-    "Yobe",
-    "Zamfara",
-    "Abuja",
-  ];
+interface FormValues {
+  name: string;
+  level: string;
+  phoneNumber: string;
+  department: string;
+  date: string;
+  faculty: string;
+  state: string;
+}
 
+export default function Modal({ isOpen, onClose }: ModalProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     control,
-  } = useForm();
+  } = useForm<FormValues>();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: FormValues) => {
     // Create FormData manually for the server action
     const formData = new FormData();
     formData.append("name", data.name);
@@ -77,7 +42,7 @@ export default function Modal({ isOpen, onClose }) {
     formData.append("state", data.state);
 
     // Call server action
-    const result = await createMemberProfile(formData);
+    await createMemberProfile(formData);
     onClose();
     reset();
   };
@@ -98,29 +63,26 @@ export default function Modal({ isOpen, onClose }) {
             Create New Member
           </h2>
         </div>
-        <form
-          action={createMemberProfile}
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block dark:text-gray-100">Fullname</label>
             <input
               type="text"
-              name="name"
               className="mt-1 w-full border rounded-md p-2 dark:bg-transparent dark:border-gray-600 dark:text-gray-100"
               required
               placeholder="Enter fullname"
               {...register("name", {
                 required: "Name is required",
                 pattern: {
-                  value: /^[^\s].*[^s]$/, // Regular expression to prevent leading or trailing spaces
+                  value: /^[^\s].*[^\s]$/,
                   message: "Name should not have trailing spaces",
                 },
               })}
             />
             {errors.name && (
-              <span className="text-red-600">{errors.name.message}</span>
+              <span className="text-red-600">
+                {(errors.name as FieldError).message}
+              </span>
             )}
           </div>
 
@@ -128,7 +90,6 @@ export default function Modal({ isOpen, onClose }) {
             <label htmlFor="faculty" className="dark:text-gray-100">
               Faculty
             </label>
-
             <Controller
               name="faculty"
               control={control}
@@ -155,6 +116,11 @@ export default function Modal({ isOpen, onClose }) {
                 </select>
               )}
             />
+            {errors.faculty && (
+              <span className="text-red-600">
+                {(errors.faculty as FieldError).message}
+              </span>
+            )}
           </div>
 
           <div>
@@ -162,19 +128,20 @@ export default function Modal({ isOpen, onClose }) {
             <input
               type="text"
               required
-              name="department"
               className="mt-1 w-full border rounded-md p-2 dark:bg-transparent dark:border-gray-600 dark:text-gray-100"
               placeholder="Enter Department"
               {...register("department", {
                 required: "Department is required",
                 pattern: {
-                  value: /^[^\s].*[^s]$/, // Regular expression to prevent leading or trailing spaces
+                  value: /^[^\s].*[^\s]$/,
                   message: "Department should not have trailing spaces",
                 },
               })}
             />
             {errors.department && (
-              <span className="text-red-600">{errors.department.message}</span>
+              <span className="text-red-600">
+                {(errors.department as FieldError).message}
+              </span>
             )}
           </div>
 
@@ -184,7 +151,6 @@ export default function Modal({ isOpen, onClose }) {
               <input
                 type="text"
                 required
-                name="level"
                 className="mt-1 w-full border rounded-md dark:bg-transparent dark:border-gray-600 dark:text-gray-100 p-2"
                 placeholder="Enter the level"
                 {...register("level", {
@@ -196,7 +162,9 @@ export default function Modal({ isOpen, onClose }) {
                 })}
               />
               {errors.level && (
-                <span className="text-red-600">{errors.level.message}</span>
+                <span className="text-red-600">
+                  {(errors.level as FieldError).message}
+                </span>
               )}
             </div>
 
@@ -205,7 +173,6 @@ export default function Modal({ isOpen, onClose }) {
               <input
                 type="text"
                 required
-                name="phoneNumber"
                 placeholder="Enter Phone number"
                 className="mt-1 w-full border rounded-md dark:bg-transparent dark:border-gray-600 dark:text-gray-100 p-2"
                 {...register("phoneNumber", {
@@ -218,7 +185,7 @@ export default function Modal({ isOpen, onClose }) {
               />
               {errors.phoneNumber && (
                 <span className="text-red-600">
-                  {errors.phoneNumber.message}
+                  {(errors.phoneNumber as FieldError).message}
                 </span>
               )}
             </div>
@@ -230,14 +197,15 @@ export default function Modal({ isOpen, onClose }) {
               <input
                 type="date"
                 required
-                name="date"
                 className="mt-1 w-full border rounded-md dark:bg-transparent dark:border-gray-600 dark:text-gray-100 p-[6.5px]"
                 {...register("date", {
                   required: "Date is required",
                 })}
               />
               {errors.date && (
-                <span className="text-red-600">{errors.date.message}</span>
+                <span className="text-red-600">
+                  {(errors.date as FieldError).message}
+                </span>
               )}
             </div>
 
@@ -271,6 +239,11 @@ export default function Modal({ isOpen, onClose }) {
                   </select>
                 )}
               />
+              {errors.state && (
+                <span className="text-red-600">
+                  {(errors.state as FieldError).message}
+                </span>
+              )}
             </div>
           </div>
 

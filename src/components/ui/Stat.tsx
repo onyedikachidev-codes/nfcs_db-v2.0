@@ -6,14 +6,14 @@ const mons = Montserrat({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
-interface Props {
-  children: React.ReactNode;
+interface StatProps {
   title: string;
-  value: string;
-  text: string;
+  value: number | null;
+  text?: string;
+  children?: React.ReactNode;
 }
 
-function Stat({ children, title, value, text }: Props) {
+function Stat({ children, title, value, text }: StatProps) {
   return (
     <div className="bg-white border border-gray-50 rounded-md dark:bg-gray-700 dark:border-gray-700 p-6 flex gap-4">
       <div className="">{children}</div>

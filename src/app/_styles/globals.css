@@ -5,6 +5,30 @@
   --axis-label-color: #1b2631;
   --cartesian-label-color: #1b2631;
   --stroke-color: #eff6ff;
+
+  --color-primary-50: #e1e8ef;
+  --color-primary-100: #d4dee7;
+  --color-primary-200: #1b2631;
+  --color-primary-300: #99b0c7;
+  --color-primary-400: #7c99b6;
+  --color-primary-500: #5e82a6;
+  --color-primary-600: #4c6b8a;
+  --color-primary-700: #b7c7d7;
+  --color-primary-800: #2c3d4f;
+  --color-primary-900: #5243c2;
+  --color-primary-950: #4d13b9;
+
+  --color-accent-50: #faf5f0;
+  --color-accent-100: #f4ece1;
+  --color-accent-200: #e8d6bf;
+  --color-accent-300: #ddc2a2;
+  --color-accent-400: #d2af84;
+  --color-accent-500: #c69963;
+  --color-accent-600: #b78343;
+  --color-accent-700: #926835;
+  --color-accent-800: #6c4d28;
+  --color-accent-900: #4b351b;
+  --color-accent-950: #382814;
 }
 
 .dark {
@@ -12,13 +36,56 @@
   --axis-label-color: #d4dee7;
   --cartesian-label-color: #d4dee7;
   --stroke-color: #1b2631;
+
+  --color-primary-50: #e1e8ef;
+  --color-primary-100: #d4dee7;
+  --color-primary-200: #b7c7d7;
+  --color-primary-300: #99b0c7;
+  --color-primary-400: #7c99b6;
+  --color-primary-500: #5e82a6;
+  --color-primary-600: #4c6b8a;
+  --color-primary-700: #1b2631;
+  --color-primary-800: #2c3d4f;
+  --color-primary-900: #5243c2;
+  --color-primary-950: #4d13b9;
+
+  --color-accent-50: #faf5f0;
+  --color-accent-100: #f4ece1;
+  --color-accent-200: #e8d6bf;
+  --color-accent-300: #ddc2a2;
+  --color-accent-400: #d2af84;
+  --color-accent-500: #c69963;
+  --color-accent-600: #b78343;
+  --color-accent-700: #926835;
+  --color-accent-800: #6c4d28;
+  --color-accent-900: #4b351b;
+  --color-accent-950: #382814;
 }
 
 @theme inline {
   --color-primary-50: #e1e8ef;
   --color-primary-100: #d4dee7;
   --color-primary-200: #b7c7d7;
-  --color-primary-300: #5e82a6;
+  --color-primary-300: #99b0c7;
+  --color-primary-400: #7c99b6;
+  --color-primary-500: #5e82a6;
+  --color-primary-600: #4c6b8a;
+  --color-primary-700: #1b2631;
+  --color-primary-800: #2c3d4f;
+  --color-primary-900: #5243c2;
+  --color-primary-950: #4d13b9;
+
+  --color-accent-50: #faf5f0;
+  --color-accent-100: #f4ece1;
+  --color-accent-200: #e8d6bf;
+  --color-accent-300: #ddc2a2;
+  --color-accent-400: #d2af84;
+  --color-accent-500: #c69963;
+  --color-accent-600: #b78343;
+  --color-accent-700: #926835;
+  --color-accent-800: #6c4d28;
+  --color-accent-900: #4b351b;
+  --color-accent-950: #382814;
 
   --breakpoint-xs: 25rem;
   --breakpoint-xmd: 34rem;

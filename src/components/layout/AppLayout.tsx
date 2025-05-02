@@ -1,6 +1,5 @@
-import { auth } from "../lib/auth";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
+import Header from "@/components/ui/Header";
+import Sidebar from "@/components/ui/Sidebar";
 
 export default function AppLayout({
   children,
