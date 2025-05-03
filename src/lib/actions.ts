@@ -1,21 +1,7 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+"use server";
+
 import supabase from "./supabase";
 import { revalidatePath } from "next/cache";
-
-export async function getMembers() {
-  const {
-    data: members = [],
-    error,
-    count,
-  } = await supabase.from("members").select("*", { count: "exact" });
-
-  if (error) {
-    console.error(error);
-    throw new Error("Member could not be loaded");
-  }
-
-  return { members, count };
-}
 
 interface MemberProfile {
   name: string | null;
@@ -56,4 +42,40 @@ export async function createMemberProfile(formData: FormData): Promise<void> {
 
   revalidatePath("/members");
   revalidatePath("/");
+}
+
+export async function deleteMember(id: number) {
+  const { error } = await supabase.from("members").delete().eq("id", id);
+
+  if (error) throw new Error("Member could not be deleted");
+
+  revalidatePath("/members");
+}
+
+export async function updateMemberFromClient(member: {
+  id: number;
+  name: string;
+  level: number;
+  department?: string | null;
+  phoneNumber: string;
+  date: string;
+  faculty: string;
+  state: string;
+}) {
+  const { id, ...updateData } = member;
+
+  const { error } = await supabase
+    .from("members")
+    .update(updateData)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error.message);
+    throw new Error("Member profile could not be updated");
+  }
+
+  revalidatePath(`/members/${id}`);
+  revalidatePath("/members");
 }

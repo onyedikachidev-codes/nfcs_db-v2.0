@@ -2,6 +2,7 @@ import "@/app/_styles/globals.css";
 import AppLayout from "@/components/layout/AppLayout";
 
 import { Poppins } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default async function RootLayout({
       <body className={`${poppins.variable} antialiased min-h-screen `}>
         <AppLayout>
           <div>{children}</div>
+          <Toaster position="top-center" />
         </AppLayout>
       </body>
     </html>

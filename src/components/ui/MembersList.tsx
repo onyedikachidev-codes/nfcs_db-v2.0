@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 import Modal from "./Modal";
-import Pagination from "./Pagination";
-import Sort from "./Sort";
+import { Pagination } from "./Pagination";
+
 import ThreeDotsModal from "./ThreeDotsModal";
 
 import { Montserrat } from "next/font/google";
 import SearchBig from "./SearchBig";
-import { searchMembersByName } from "../lib/data-services";
+import { searchMembersByName } from "@/api/index";
+import { useClientPagination } from "@/hooks/useClientPagination";
 
 const mons = Montserrat({
   subsets: ["latin"],
@@ -17,14 +18,28 @@ const mons = Montserrat({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
-function MembersList({ members, count, sortField, sortOrder }) {
+interface Member {
+  id: string;
+  name: string;
+  level: string;
+  date: string;
+  phoneNumber: string;
+}
+
+interface MembersListProps {
+  members: Member[] | null;
+  count: number | null;
+}
+
+function MembersList({ members, count }: MembersListProps) {
   //Modal Window
   const [isModalOpen, setModalOpen] = useState(false);
-  const [activeThreeDotsModal, setActiveThreeDotsModal] = useState(null);
-
-  const [value, setValue] = useState("Search for name");
-  const [errorText, setErrorText] = useState("");
-  const [results, setResults] = useState([]);
+  const [activeThreeDotsModal, setActiveThreeDotsModal] = useState<
+    string | null
+  >(null);
+  const [value, setValue] = useState<string>("Search for name");
+  const [errorText, setErrorText] = useState<string>("");
+  const [results, setResults] = useState<Member[]>([]);
 
   useEffect(() => {
     if (value && value.length > 3) {
@@ -38,6 +53,16 @@ function MembersList({ members, count, sortField, sortOrder }) {
       setResults([]);
     }
   }, [value]);
+
+  const initialPage = 1;
+  const limit = 8;
+
+  const {
+    currentData: pageItems,
+    page,
+    setPage,
+    totalPages,
+  } = useClientPagination(members ?? [], initialPage, limit);
 
   return (
     <div className="mt-10 mb-8">
@@ -63,7 +88,6 @@ function MembersList({ members, count, sortField, sortOrder }) {
             Add new member
           </button>
           <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} />
-          <Sort members={members} sortField={sortField} sortOrder={sortOrder} />
         </div>
       </div>
 
@@ -127,7 +151,8 @@ function MembersList({ members, count, sortField, sortOrder }) {
                   </td>
                 </tr>
               ))
-            : members.map((member, index) => (
+            : members &&
+              members.map((member, index) => (
                 <tr key={member.id} className="border-b dark:border-gray-600">
                   <td
                     className={`pl-6 pr-2 py-5 font-semibold text-gray-700 dark:text-gray-100 text-xl ${mons.className}`}
@@ -176,7 +201,11 @@ function MembersList({ members, count, sortField, sortOrder }) {
       </table>
 
       <div className="w-[93%] mx-10 my-4 bg-white dark:bg-gray-600">
-        <Pagination members={members} count={count} />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );

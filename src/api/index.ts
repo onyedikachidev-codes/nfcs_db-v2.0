@@ -7,6 +7,21 @@ interface LevelCountsProps {
   400: number;
 }
 
+export async function getMembers() {
+  const {
+    data: members = [],
+    error,
+    count,
+  } = await supabase.from("members").select("*", { count: "exact" });
+
+  if (error) {
+    console.error(error);
+    throw new Error("Member could not be loaded");
+  }
+
+  return { members, count };
+}
+
 export async function getLevel() {
   const { data, error } = await supabase.from("members").select("level");
 
@@ -129,4 +144,19 @@ export async function fetchState(): Promise<StateResult> {
   }
 
   return { state: mostFrequentState, count: maxCount };
+}
+
+export async function searchMembersByName(query: string) {
+  const { data, error } = await supabase
+    .from("members")
+    .select("*")
+    .ilike("name", `%${query}%`)
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return data;
 }
