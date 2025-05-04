@@ -7,12 +7,19 @@ interface LevelCountsProps {
   400: number;
 }
 
-export async function getMembers() {
+export async function getMembers(page: number, pageSize: number) {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
   const {
     data: members = [],
     error,
     count,
-  } = await supabase.from("members").select("*", { count: "exact" });
+  } = await supabase
+    .from("members")
+    .select("*", { count: "exact" })
+    .order("name", { ascending: true })
+    .range(from, to);
 
   if (error) {
     console.error(error);

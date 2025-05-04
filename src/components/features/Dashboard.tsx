@@ -1,12 +1,18 @@
 import React from "react";
-import { fetchFaculty, fetchLevels, fetchState, getLevel } from "@/api";
+import {
+  fetchFaculty,
+  fetchLevels,
+  fetchState,
+  getLevel,
+  getMembers,
+} from "@/api";
 import LevelChart from "../ui/LevelChart";
-import { getMostFrequentLevel } from "@/app/_constants";
-import { getMembers } from "@/lib/actions";
+import { getMostFrequentLevel, PAGE_SIZE } from "@/app/_constants";
 import Stats from "../ui/Stats";
 
 export default async function Dashboard() {
-  const { count } = await getMembers();
+  const page = 1;
+  const { count } = await getMembers(page, PAGE_SIZE);
 
   const levels = await fetchLevels();
   const result = getMostFrequentLevel(levels);

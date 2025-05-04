@@ -13,6 +13,7 @@ interface Props {
     name: string;
     level: number;
     date: string;
+    department: string;
     phoneNumber: string;
     faculty: string;
     state: string;
@@ -30,6 +31,7 @@ export default function EditForm({ isOpen, onClose, member }: Props) {
       name: member.name,
       level: member.level,
       date: member.date,
+      department: member.department,
       phoneNumber: member.phoneNumber,
       faculty: member.faculty,
       state: member.state,
@@ -105,11 +107,21 @@ export default function EditForm({ isOpen, onClose, member }: Props) {
             />
           </div>
 
+          <div>
+            <label className="block text-start">Deparment</label>
+            <input
+              {...register("department", {
+                required: "Department is required",
+              })}
+              className="mt-1 w-full border border-gray-300 rounded-md dark:bg-transparent dark:border-gray-600 dark:text-gray-100 p-2"
+              placeholder="Enter department"
+            />
+          </div>
+
           <div className="flex gap-3">
             <div className="w-[49%]">
               <label className="block text-start">Level</label>
               <input
-                type="number"
                 {...register("level", { required: "Level is required" })}
                 className="mt-1 w-full border border-gray-300 rounded-md dark:bg-transparent dark:border-gray-600 dark:text-gray-100 p-2"
                 placeholder="Enter the level"

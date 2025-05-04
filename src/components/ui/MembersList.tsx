@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 import Modal from "./Modal";
-import { Pagination } from "./Pagination";
+import Pagination from "./Pagination";
 
 import ThreeDotsModal from "./ThreeDotsModal";
 
 import { Montserrat } from "next/font/google";
 import SearchBig from "./SearchBig";
 import { searchMembersByName } from "@/api/index";
-import { useClientPagination } from "@/hooks/useClientPagination";
 
 const mons = Montserrat({
   subsets: ["latin"],
@@ -28,7 +27,7 @@ interface Member {
 
 interface MembersListProps {
   members: Member[] | null;
-  count: number | null;
+  count: number;
 }
 
 function MembersList({ members, count }: MembersListProps) {
@@ -54,16 +53,6 @@ function MembersList({ members, count }: MembersListProps) {
     }
   }, [value]);
 
-  const initialPage = 1;
-  const limit = 8;
-
-  const {
-    currentData: pageItems,
-    page,
-    setPage,
-    totalPages,
-  } = useClientPagination(members ?? [], initialPage, limit);
-
   return (
     <div className="mt-10 mb-8">
       <h2
@@ -72,7 +61,7 @@ function MembersList({ members, count }: MembersListProps) {
         All Members
       </h2>
       <div className="flex justify-between mb-10 items-center mx-10">
-        <div className="bg-blue-800">
+        <div className="">
           <SearchBig
             value={value}
             setValue={setValue}
@@ -82,7 +71,7 @@ function MembersList({ members, count }: MembersListProps) {
         </div>
         <div className="flex gap-10">
           <button
-            className={`${mons.className} bg-blue-800 hover:bg-blue-600  py-[0.6rem] text-lg rounded-lg px-3 text-gray-50 focus:outline-none`}
+            className={`${mons.className} cursor-pointer bg-blue-800 hover:bg-blue-600  py-[0.6rem] text-lg rounded-lg px-3 text-gray-50 focus:outline-none`}
             onClick={() => setModalOpen(true)}
           >
             Add new member
@@ -106,7 +95,7 @@ function MembersList({ members, count }: MembersListProps) {
 
         <tbody>
           {results.length > 0
-            ? results.map((member, index) => (
+            ? results.map((member) => (
                 <tr key={member.id} className="border-b dark:border-gray-600">
                   <td
                     className={`pl-6 pr-2 py-5 font-semibold text-gray-700 dark:text-gray-100 text-xl ${mons.className}`}
@@ -152,7 +141,7 @@ function MembersList({ members, count }: MembersListProps) {
                 </tr>
               ))
             : members &&
-              members.map((member, index) => (
+              members.map((member) => (
                 <tr key={member.id} className="border-b dark:border-gray-600">
                   <td
                     className={`pl-6 pr-2 py-5 font-semibold text-gray-700 dark:text-gray-100 text-xl ${mons.className}`}
@@ -201,11 +190,7 @@ function MembersList({ members, count }: MembersListProps) {
       </table>
 
       <div className="w-[93%] mx-10 my-4 bg-white dark:bg-gray-600">
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
+        <Pagination count={count} />
       </div>
     </div>
   );
