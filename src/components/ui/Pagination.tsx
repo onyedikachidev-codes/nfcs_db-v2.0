@@ -1,82 +1,89 @@
-"use client";
+import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
-import { useSearchParams, useRouter } from "next/navigation";
-import { PAGE_SIZE } from "@/app/_constants/index";
-
-interface PaginationProps {
-  count: number;
+interface PaginationControlsProps {
+  page: number;
+  totalPages: number;
+  onPageChange: (newPage: number) => void;
 }
 
-function Pagination({ count }: PaginationProps) {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+// Utility to build page array with ellipsis
+function getPageItems(page: number, totalPages: number): (number | "...")[] {
+  const items: (number | "...")[] = [];
 
-  const currentPage = searchParams.get("page")
-    ? Number(searchParams.get("page"))
-    : 1;
-
-  const pageCount = Math.ceil(count / PAGE_SIZE);
-
-  function nextPage() {
-    if (currentPage < pageCount) {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("page", (currentPage + 1).toString());
-      router.push(`?${params.toString()}`);
-    }
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) items.push(i);
+    return items;
   }
 
-  function prevPage() {
-    if (currentPage > 1) {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("page", (currentPage - 1).toString());
-      router.push(`?${params.toString()}`);
-    }
+  if (page <= 5) {
+    for (let i = 1; i <= 5; i++) items.push(i);
+    items.push("...");
+    items.push(totalPages);
+    return items;
   }
 
-  if (pageCount <= 1) return null;
+  if (page > totalPages - 5) {
+    items.push(1);
+    items.push("...");
+    for (let i = totalPages - 4; i <= totalPages; i++) items.push(i);
+    return items;
+  }
+
+  // middle range
+  items.push(1);
+  items.push("...");
+  for (let i = page - 2; i <= page + 2; i++) items.push(i);
+  items.push("...");
+  items.push(totalPages);
+  return items;
+}
+
+export const Pagination: React.FC<PaginationControlsProps> = ({
+  page,
+  totalPages,
+  onPageChange,
+}) => {
+  const pageItems = getPageItems(page, totalPages);
 
   return (
-    <div className="flex items-center justify-between py-2 px-4 bg-white dark:bg-gray-600 dark:text-gray-100 mx-4">
-      <p className="text-sm">
-        Showing{" "}
-        <span className="font-bold">{(currentPage - 1) * PAGE_SIZE + 1}</span>{" "}
-        to{" "}
-        <span className="font-bold">
-          {currentPage === pageCount ? count : currentPage * PAGE_SIZE}
-        </span>{" "}
-        of <span className="font-bold">{count}</span> results
-      </p>
+    <div className="flex items-center space-x-2 justify-center pb-8 pt-4">
+      <button
+        onClick={() => onPageChange(page - 1)}
+        disabled={page === 1}
+        className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+      >
+        <ChevronLeft size={20} />
+      </button>
 
-      <div className="flex gap-2">
-        <button
-          onClick={prevPage}
-          disabled={currentPage === 1}
-          className={`flex items-center gap-2 px-3 py-2 text-sm font-medium border rounded-md transition-all ${
-            currentPage === 1
-              ? "bg-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-500 dark:text-gray-100"
-              : "bg-white border-gray-300 hover:bg-gray-100 dark:bg-gray-600 dark:hover:bg-gray-700"
-          }`}
-        >
-          <HiChevronLeft />
-          Previous
-        </button>
+      {pageItems.map((item, idx) =>
+        item === "..." ? (
+          <span key={`ellipsis-${idx}`} className="px-2 text-gray-500">
+            …
+          </span>
+        ) : (
+          <button
+            key={item}
+            onClick={() => onPageChange(item)}
+            className={`w-8 h-8 flex items-center justify-center rounded-full cursor-pointer font-medium
+              ${
+                item === page
+                  ? "bg-indigo-600 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+          >
+            {item}
+          </button>
+        )
+      )}
 
-        <button
-          onClick={nextPage}
-          disabled={currentPage === pageCount}
-          className={`flex items-center gap-2 px-3 py-2 text-sm font-medium border rounded-md transition-all ${
-            currentPage === pageCount
-              ? "bg-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-500 dark:text-gray-100"
-              : "bg-white border-gray-300 hover:bg-gray-100 dark:bg-gray-600 dark:hover:bg-gray-700"
-          }`}
-        >
-          Next
-          <HiChevronRight />
-        </button>
-      </div>
+      <button
+        onClick={() => onPageChange(page + 1)}
+        disabled={page === totalPages}
+        className="p-2 rounded-full cursor-pointer hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <ChevronRight size={20} />
+      </button>
     </div>
   );
-}
-
-export default Pagination;
+};
